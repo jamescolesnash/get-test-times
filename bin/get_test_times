@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'get_test_times'
+
+runner = GetTestTimes.new
+runner.run
