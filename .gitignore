@@ -51,3 +51,7 @@ build-iPhoneSimulator/
 
 # Osx Specific
 .DS_Store
+
+# App Specific
+/log
+*.csv
