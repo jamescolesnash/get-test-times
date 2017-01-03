@@ -7,13 +7,6 @@ class GetTestTimes
   $token = "e2203dc09d587b853d016919fda73c15aef42e92"
   $base_log_path = "log/"
 
-  SPECIAL_PREFIXES = {
-      query_string: "_",
-      request_time: "_",
-      host: "_",
-      timestamp: "",
-    }
-
   def run
     branch = ARGV[0] ? ARGV[0] : "master"
     build_amount = ARGV[1] ? ARGV[1] : "1"
@@ -25,18 +18,30 @@ class GetTestTimes
       exit
     end
 
-    test_times_csv = test_times_csv.sort_by { |row| row['run_time'].to_f }.reverse!
-
+    ten_slowest = test_times_csv.sort_by{ |row| row['run_time'].to_f }
+      .reverse!
+      .uniq!{ |x| x['file_path'] }
     puts "10 slowest tests"
     (1..11).each do |i|
-      puts "#{test_times_csv[i]['file_path']}, #{test_times_csv[i]['run_time']}"
+      puts "#{ten_slowest[i]['file_path']}, #{ten_slowest[i]['run_time']}"
     end
 
-    test_times_csv.sort_by! { |row| row['inserts'].to_f }.reverse!
+    ten_slowest_js = test_times_csv.select{ |row| row['file_path']
+      .include?('spec/feature') }
+      .sort_by{ |row| row['run_time'].to_f }
+      .reverse!
+      .uniq!{ |x| x['file_path'] }
+    puts "10 slowest js tests"
+    (1..11).each do |i|
+      puts "#{ten_slowest_js[i]['file_path']}, #{ten_slowest_js[i]['run_time']}"
+    end
 
+    ten_most_inserts = test_times_csv.sort_by{ |row| row['inserts'].to_f }
+      .reverse!
+      .uniq!{ |x| x['file_path'] }
     puts "10 most inserts"
     (1..11).each do |i|
-      puts "#{test_times_csv[i]['file_path']}, #{test_times_csv[i]['inserts']}"
+      puts "#{ten_most_inserts[i]['file_path']}, #{ten_most_inserts[i]['inserts']}"
     end
   end
 
