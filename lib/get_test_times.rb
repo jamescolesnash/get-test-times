@@ -23,7 +23,8 @@ class GetTestTimes
       .uniq!{ |x| x['file_path'] }
     puts "10 slowest tests"
     (1..11).each do |i|
-      puts "#{ten_slowest[i]['file_path']}, #{ten_slowest[i]['run_time']}"
+      current = ten_slowest[i]
+      puts "#{current['file_path']}:#{current['line_number']}, #{current['run_time']}"
     end
 
     ten_slowest_js = test_times_csv.select{ |row| row['file_path']
@@ -33,7 +34,8 @@ class GetTestTimes
       .uniq!{ |x| x['file_path'] }
     puts "10 slowest js tests"
     (1..11).each do |i|
-      puts "#{ten_slowest_js[i]['file_path']}, #{ten_slowest_js[i]['run_time']}"
+      current = ten_slowest_js[i]
+      puts "#{current['file_path']}:#{current['line_number']}, #{current['run_time']}"
     end
 
     ten_most_inserts = test_times_csv.sort_by{ |row| row['inserts'].to_f }
@@ -41,7 +43,8 @@ class GetTestTimes
       .uniq!{ |x| x['file_path'] }
     puts "10 most inserts"
     (1..11).each do |i|
-      puts "#{ten_most_inserts[i]['file_path']}, #{ten_most_inserts[i]['inserts']}"
+      current = ten_most_inserts[i]
+      puts "#{current['file_path']}:#{current['line_number']}, #{current['inserts']}"
     end
   end
 
